@@ -24,9 +24,9 @@ public class CheckTencentStoreVersionTask extends AsyncTask<String, String, Stri
             Document document = Jsoup.connect("https://a.app.qq.com/o/simple.jsp?pkgname="+packageName)
                     .timeout(30000)
                     .get();
-            Element element = document.select("div.pp-comp > p.pp-comp-extra-p:eq(1)")
+            Element element = document.select("div.pp-comp > p.pp-comp-extra-p:last-child")
                     .first();
-            if (element != null) {
+            if (element != null && element.ownText().split("：").length==2) {
                 latestVersion = element.ownText().split("：")[1];
             }
         } catch (IOException e) {
