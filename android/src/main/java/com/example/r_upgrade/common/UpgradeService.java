@@ -133,7 +133,12 @@ public class UpgradeService extends Service {
         } else {
             filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         }
-        registerReceiver(actionReceiver, filter);
+        //registerReceiver(actionReceiver, filter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(actionReceiver, filter, Context.RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(actionReceiver, filter);
+        }
 
     }
 
