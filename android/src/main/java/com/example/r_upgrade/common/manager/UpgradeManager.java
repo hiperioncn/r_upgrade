@@ -83,31 +83,25 @@ public class UpgradeManager extends ContextWrapper {
     private Integer notificationVisibility = 0;
     private UpgradeNotificationStyle notificationStyle = UpgradeNotificationStyle.none;
 
-    final private BroadcastReceiver downloadReceiver;
 
-    final private MethodChannel channel;
+    private BroadcastReceiver downloadReceiver;
+
+    private MethodChannel channel;
 
     private DownloadPermissions.PermissionsRegistry permissionsRegistry;
-
-    public void setPermissionsRegistry(DownloadPermissions.PermissionsRegistry permissionsRegistry) {
-        this.permissionsRegistry = permissionsRegistry;
-    }
-
-    final private DownloadPermissions downloadPermissions;
-
+    private DownloadPermissions downloadPermissions;
     private Activity activity;
 
-    public void setActivity(Activity activity) {
-        this.activity = activity;
-    }
 
     public void dispose() {
         unregisterReceiver(downloadReceiver);
     }
 
-    public UpgradeManager(Context context, MethodChannel channel, DownloadPermissions storagePermissions) {
-        super(context);
+    public UpgradeManager(Activity base, MethodChannel channel, DownloadPermissions storagePermissions, DownloadPermissions.PermissionsRegistry permissionsRegistry) {
+        super(base);
+        this.activity = base;
         this.downloadPermissions = storagePermissions;
+        this.permissionsRegistry = permissionsRegistry;
         this.channel = channel;
         UpgradeSQLite.getInstance(this).pauseDownloading();
         IntentFilter filter = new IntentFilter();
@@ -115,6 +109,7 @@ public class UpgradeManager extends ContextWrapper {
         filter.addAction(UpgradeManager.DOWNLOAD_STATUS);
         filter.addAction(UpgradeManager.DOWNLOAD_INSTALL);
         downloadReceiver = createBroadcastReceiver();
+        // registerReceiver(downloadReceiver, filter);
         final int sdkInt = Build.VERSION.SDK_INT;
         if (sdkInt >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(downloadReceiver, filter, Context.RECEIVER_EXPORTED);
@@ -122,6 +117,7 @@ public class UpgradeManager extends ContextWrapper {
             registerReceiver(downloadReceiver, filter);
         }
     }
+
 
     public void upgrade(final String url, final Map<String, String> header, final String apkName, final Integer notificationVisibility, Integer notificationStyle, Integer installType, Boolean useDownloadManager, final Integer upgradeFlavor, final MethodChannel.Result result) {
         installFactory = installTypeToFactory(installType);
@@ -395,15 +391,14 @@ public class UpgradeManager extends ContextWrapper {
                 if (packageName == null || !packageName.equals(getPackageName())) {
                     return;
                 }
-                final String action = intent.getAction();
-                if (action != null && action.equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+                if (intent != null && intent.getAction() != null && intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
                     if (timer != null) {
                         timer.cancel();
                         timer = null;
                     }
                     long id = intent.getLongExtra("extra_download_id", 0);
                     queryTask(id);
-                } else if (action != null && action.equals(UpgradeManager.DOWNLOAD_STATUS)) {
+                } else if (intent != null && intent.getAction() != null && intent.getAction().equals(UpgradeManager.DOWNLOAD_STATUS)) {
 
                     final long current_length = intent.getLongExtra(PARAMS_CURRENT_LENGTH, 0);
                     final long max_length = intent.getLongExtra(PARAMS_MAX_LENGTH, 0);
@@ -447,7 +442,7 @@ public class UpgradeManager extends ContextWrapper {
                                 .put(PARAMS_PATH, path)
                                 .getMap());
 
-                } else if (action != null && action.equals(UpgradeManager.DOWNLOAD_INSTALL)) {
+                } else if (intent != null && intent.getAction() != null && intent.getAction().equals(UpgradeManager.DOWNLOAD_INSTALL)) {
                     int id = intent.getIntExtra(UpgradeService.DOWNLOAD_ID, 0);
                     installApkById(id);
                     UpgradeNotification.removeNotification(context, id);
