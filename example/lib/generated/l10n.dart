@@ -531,6 +531,186 @@ class S {
       args: [],
     );
   }
+
+  /// `Install Related`
+  String get Install_Related {
+    return Intl.message(
+      'Install Related',
+      name: 'Install_Related',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Install Type`
+  String get Install_Type {
+    return Intl.message(
+      'Install Type',
+      name: 'Install_Type',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Normal Install`
+  String get Install_Type_Normal {
+    return Intl.message(
+      'Normal Install',
+      name: 'Install_Type_Normal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Silent Install`
+  String get Install_Type_Silent {
+    return Intl.message(
+      'Silent Install',
+      name: 'Install_Type_Silent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `None`
+  String get Install_Type_None {
+    return Intl.message(
+      'None',
+      name: 'Install_Type_None',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please note that this installation type requires system permissions!`
+  String get Install_Type_Silent_Tip {
+    return Intl.message(
+      'Please note that this installation type requires system permissions!',
+      name: 'Install_Type_Silent_Tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notification Related`
+  String get Notification_Related {
+    return Intl.message(
+      'Notification Related',
+      name: 'Notification_Related',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notification Visibility`
+  String get Notification_Visibility {
+    return Intl.message(
+      'Notification Visibility',
+      name: 'Notification_Visibility',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Visible`
+  String get Notification_Visibility_Visible {
+    return Intl.message(
+      'Visible',
+      name: 'Notification_Visibility_Visible',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Visible Notify Completed`
+  String get Notification_Visibility_Visible_Notify_Completed {
+    return Intl.message(
+      'Visible Notify Completed',
+      name: 'Notification_Visibility_Visible_Notify_Completed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Visible Notify Only Completion`
+  String get Notification_Visibility_Visible_Notify_Only_Completion {
+    return Intl.message(
+      'Visible Notify Only Completion',
+      name: 'Notification_Visibility_Visible_Notify_Only_Completion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hidden`
+  String get Notification_Visibility_Hidden {
+    return Intl.message(
+      'Hidden',
+      name: 'Notification_Visibility_Hidden',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notification Style`
+  String get Notification_Style {
+    return Intl.message(
+      'Notification Style',
+      name: 'Notification_Style',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `None`
+  String get Notification_Style_None {
+    return Intl.message(
+      'None',
+      name: 'Notification_Style_None',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Speech/PlanTime`
+  String get Notification_Style_Speech_PlanTime {
+    return Intl.message(
+      'Speech/PlanTime',
+      name: 'Notification_Style_Speech_PlanTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PlanTime/Speech`
+  String get Notification_Style_PlanTime_Speech {
+    return Intl.message(
+      'PlanTime/Speech',
+      name: 'Notification_Style_PlanTime_Speech',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Speech`
+  String get Notification_Style_Speech {
+    return Intl.message(
+      'Speech',
+      name: 'Notification_Style_Speech',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PlanTime`
+  String get Notification_Style_PlanTime {
+    return Intl.message(
+      'PlanTime',
+      name: 'Notification_Style_PlanTime',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

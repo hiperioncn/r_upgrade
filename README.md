@@ -57,7 +57,7 @@ Android and IOS upgrade plugin.
 ## Getting Started
 
 ### 1. Use Plugin:
-add this code in `pubspec.yaml`
+- add this code in `pubspec.yaml`
 
 ```yaml
 dependencies:
@@ -103,7 +103,11 @@ dependencies:
 > make sure your application had this permission and request dynamic permission.
 
 ```xml
+    <!--(if you want to upload google store,can not add this permission)-->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+     <!--(if you want to use silent install，need to add this permission,and app is system app-->
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" tools:ignore="ProtectedPermissions"/>
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 ```
@@ -139,7 +143,7 @@ This upgrade have two part.
     - Inferiority：No bugs found yet. If you find a bug, you are welcome to issue
     - support: `RUpgrade.stream`、`install`、`cancel`
 ```dart
-    // [isAutoRequestInstall] downloaded finish will auto request install apk.
+    // [installType] downloaded finish will use install type to install apk.
     // [apkName] apk name (such as `release.apk`)
     // [notificationVisibility] notification visibility.
     // [notificationStyle] download notification show style about content text, only support [useDownloadManager]==false.
@@ -149,7 +153,7 @@ This upgrade have two part.
     void upgrade() async {
       int id = await RUpgrade.upgrade(
                  'https://raw.githubusercontent.com/rhymelph/r_upgrade/master/apk/app-release.apk',
-                 apkName: 'app-release.apk',isAutoRequestInstall: true);
+                 apkName: 'app-release.apk', installType: RUpgradeInstallType.normal,);
     }
 ```
 New upgraded flavor：(no support use DownloadManager)
@@ -181,6 +185,15 @@ enum RUpgradeFlavor {
     void installByPath(String path) async {
       bool isSuccess=await RUpgrade.installByPath(path);
      }
+```
+- install type
+```dart
+/// [RUpgrade.upgradeWithId]、[RUpgrade.upgrade]、[RUpgrade.install]、[RUpgrade.installByPath]
+enum RUpgradeInstallType {
+  normal,//normal install
+  silent,//silent install
+  none,// not install
+}
 ```
 
 #### 5. Pause Download
@@ -233,7 +246,7 @@ The code is as follows：
                 'https://mydata-1252536312.cos.ap-guangzhou.myqcloud.com/r_upgrade.patch',
                 fileName: 'r_upgrade.patch',
                 useDownloadManager: false,
-                isAutoRequestInstall: false,
+                installType: RUpgradeInstallType.none,
                 upgradeFlavor: RUpgradeFlavor.incrementUpgrade,
               );
     }

@@ -79,8 +79,10 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int? id;
-  bool? isAutoRequestInstall = false;
-
+  RUpgradeInstallType installType = RUpgradeInstallType.normal;
+  NotificationVisibility notificationVisibility =
+      NotificationVisibility.VISIBILITY_VISIBLE;
+  NotificationStyle notificationStyle = NotificationStyle.planTime;
   UpgradeMethod? upgradeMethod;
 
   String? iosVersion = "";
@@ -145,6 +147,133 @@ class _MyAppState extends State<MyApp> {
         children: <Widget>[
           _buildDownloadWindow(),
           Divider(),
+          ListTile(
+            title: Text(
+              S.of(context).Notification_Related,
+              style: Theme.of(context).textTheme.headline6!.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ),
+          ListTile(
+            title: Text(
+              S.of(context).Notification_Visibility,
+            ),
+            trailing: DropdownButton<NotificationVisibility>(
+              items: [
+                DropdownMenuItem(
+                  child: Text(S.of(context).Notification_Visibility_Visible),
+                  value: NotificationVisibility.VISIBILITY_VISIBLE,
+                ),
+                DropdownMenuItem(
+                  child: Text(S
+                      .of(context)
+                      .Notification_Visibility_Visible_Notify_Completed),
+                  value: NotificationVisibility
+                      .VISIBILITY_VISIBLE_NOTIFY_COMPLETED,
+                ),
+                DropdownMenuItem(
+                  child: Text(S.of(context).Notification_Visibility_Hidden),
+                  value: NotificationVisibility.VISIBILITY_HIDDEN,
+                ),
+                DropdownMenuItem(
+                  child: Text(S
+                      .of(context)
+                      .Notification_Visibility_Visible_Notify_Only_Completion),
+                  value: NotificationVisibility
+                      .VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION,
+                ),
+              ],
+              value: notificationVisibility,
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  notificationVisibility = value;
+                });
+              },
+            ),
+          ),
+          ListTile(
+            title: Text(
+              S.of(context).Notification_Style,
+            ),
+            trailing: DropdownButton<NotificationStyle>(
+              items: [
+                DropdownMenuItem(
+                  child: Text(S.of(context).Notification_Style_PlanTime),
+                  value: NotificationStyle.planTime,
+                ),
+                DropdownMenuItem(
+                  child: Text(S.of(context).Notification_Style_PlanTime_Speech),
+                  value: NotificationStyle.planTimeAndSpeech,
+                ),
+                DropdownMenuItem(
+                  child: Text(S.of(context).Notification_Style_Speech_PlanTime),
+                  value: NotificationStyle.speechAndPlanTime,
+                ),
+                DropdownMenuItem(
+                  child: Text(S.of(context).Notification_Style_Speech),
+                  value: NotificationStyle.speech,
+                ),
+                DropdownMenuItem(
+                  child: Text(S.of(context).Notification_Style_None),
+                  value: NotificationStyle.none,
+                ),
+              ],
+              value: notificationStyle,
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  notificationStyle = value;
+                });
+              },
+            ),
+          ),
+          ListTile(
+            title: Text(
+              S.of(context).Install_Related,
+              style: Theme.of(context).textTheme.headline6!.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ),
+          ListTile(
+            title: Text(
+              S.of(context).Install_Type,
+            ),
+            trailing: DropdownButton<RUpgradeInstallType>(
+              items: [
+                DropdownMenuItem(
+                  child: Text(S.of(context).Install_Type_Normal),
+                  value: RUpgradeInstallType.normal,
+                ),
+                DropdownMenuItem(
+                  child: Text(S.of(context).Install_Type_Silent),
+                  value: RUpgradeInstallType.silent,
+                ),
+                DropdownMenuItem(
+                  child: Text(S.of(context).Install_Type_None),
+                  value: RUpgradeInstallType.none,
+                ),
+              ],
+              value: installType,
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  installType = value;
+                });
+              },
+            ),
+          ),
+          if (installType == RUpgradeInstallType.silent)
+            ListTile(
+              title: Text(
+                S.of(context).Install_Type_Silent_Tip,
+                style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                      color: Theme.of(context).errorColor,
+                    ),
+              ),
+            ),
           ListTile(
             title: Text(
               S.of(context).Update_the_related,
@@ -220,10 +349,11 @@ class _MyAppState extends State<MyApp> {
               id = await RUpgrade.upgrade(
 //                "http://192.168.1.105:8888/files/static/kuan.apk",
 //                  'http://dl-cdn.coolapkmarket.com/down/apk_file/2020/0308/Coolapk-v10.0.3-2003081-coolapk-app-release.apk?_upt=b210caeb1585012557',
-                  'https://mydata-1252536312.cos.ap-guangzhou.myqcloud.com/r_upgrade.apk',
+                  'https://dl.coolapk.com/down?pn=com.coolapk.market&id=NDU5OQ&h=46bb9d98&from=from-web',
                   fileName: 'r_upgrade.apk',
-                  isAutoRequestInstall: isAutoRequestInstall!,
-                  notificationStyle: NotificationStyle.speechAndPlanTime,
+                  installType: installType,
+                  notificationStyle: notificationStyle,
+                  notificationVisibility: notificationVisibility,
                   useDownloadManager: false);
               upgradeMethod = UpgradeMethod.all;
               setState(() {});
@@ -249,7 +379,8 @@ class _MyAppState extends State<MyApp> {
               final status = await RUpgrade.getDownloadStatus(id!);
 
               if (status == DownloadStatus.STATUS_SUCCESSFUL) {
-                bool? isSuccess = await RUpgrade.install(id!);
+                bool? isSuccess =
+                    await RUpgrade.install(id!, installType: installType);
                 if (isSuccess != null && isSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(S.of(context).The_request_is_successful)));
@@ -259,15 +390,6 @@ class _MyAppState extends State<MyApp> {
                     content: Text(S.of(context).The_current_ID_not_download)));
               }
             },
-          ),
-          CheckboxListTile(
-            value: isAutoRequestInstall,
-            onChanged: (bool? value) {
-              setState(() {
-                isAutoRequestInstall = value;
-              });
-            },
-            title: Text(S.of(context).After_download_to_install),
           ),
           ListTile(
             title: Text(S.of(context).Continue_to_update),
@@ -336,8 +458,10 @@ class _MyAppState extends State<MyApp> {
                   'https://mydata-1252536312.cos.ap-guangzhou.myqcloud.com/r_upgrade.zip',
                   fileName: 'r_upgrade.zip',
                   useDownloadManager: false,
-                  isAutoRequestInstall: false,
-                  upgradeFlavor: RUpgradeFlavor.hotUpgrade);
+                  installType: installType,
+                  upgradeFlavor: RUpgradeFlavor.hotUpgrade,
+                  notificationStyle: notificationStyle,
+                  notificationVisibility: notificationVisibility);
               upgradeMethod = UpgradeMethod.hot;
               setState(() {});
             },
@@ -363,7 +487,8 @@ class _MyAppState extends State<MyApp> {
               final status = await RUpgrade.getDownloadStatus(id!);
 
               if (status == DownloadStatus.STATUS_SUCCESSFUL) {
-                bool? isSuccess = await RUpgrade.install(id!);
+                bool? isSuccess =
+                    await RUpgrade.install(id!, installType: installType);
                 if (isSuccess != null && isSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(S
@@ -407,7 +532,9 @@ class _MyAppState extends State<MyApp> {
                 'https://mydata-1252536312.cos.ap-guangzhou.myqcloud.com/r_upgrade.patch',
                 fileName: 'r_upgrade.patch',
                 useDownloadManager: false,
-                isAutoRequestInstall: false,
+                installType: installType,
+                notificationVisibility: notificationVisibility,
+                notificationStyle: notificationStyle,
                 upgradeFlavor: RUpgradeFlavor.incrementUpgrade,
               );
               upgradeMethod = UpgradeMethod.increment;
@@ -436,7 +563,7 @@ class _MyAppState extends State<MyApp> {
               try {
                 final status = await RUpgrade.getDownloadStatus(id!);
                 if (status == DownloadStatus.STATUS_SUCCESSFUL) {
-                  await RUpgrade.install(id!);
+                  await RUpgrade.install(id!, installType: installType);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content:

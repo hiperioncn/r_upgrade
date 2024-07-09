@@ -18,6 +18,7 @@ Android和IOS的升级应用插件==Flutter应用升级插件
     - [✔] 修改通知栏显示的信息
 - [✔] `Android`热更新
 - [✔] `Android`增量升级
+- [✔] `Android`普通安装，静默安装
 - [✔] `IOS`根据APPID跳转AppStore升级
 - [✔] `IOS`根据APPID获取AppStore当前上架版本
 
@@ -104,9 +105,14 @@ dependencies:
 
 > 注意，在Android应用中，请确保`AndroidManifest.xml`中声明以下权限，并在6.0系统上进行动态授权，不然会调用升级方法将抛出权限异常
 ```xml
+    <!--(如果需要上架到google store ,不能添加这个权限 , 也无法使用应用内更新功能)-->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!--(静默安装需要添加这个权限，并且需要系统应用-->
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" tools:ignore="ProtectedPermissions"/>
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
 ```
 
 #### 1.添加升级下载进度监听
@@ -142,7 +148,7 @@ info 里包含的信息如下:
     - 劣势：暂无发现，如果发现bug欢迎提issue.
     - 支持的方法：默认全部
 ```dart
-    // [isAutoRequestInstall] 下载完成后自动弹出安装
+    // [installType] 下载完成后的安装类型，详情可以看[RUpgradeInstallType]
     // [apkName] 安装包的名字（需要包含.apk）
     // [notificationVisibility] 通知栏显示方式
     // [useDownloadManager] 是否使用DownloadManager，默认不使用（DownloadManager不支持http下载，下载手动暂停，断点续传等，不建议使用）
@@ -150,7 +156,7 @@ info 里包含的信息如下:
     void upgrade() async {
       int id = await RUpgrade.upgrade(
                  'https://raw.githubusercontent.com/rhymelph/r_upgrade/master/apk/app-release.apk',
-                 apkName: 'app-release.apk',isAutoRequestInstall: true);
+                 apkName: 'app-release.apk',installType: RUpgradeInstallType.normal,);
     }
 ```
 新增升级的口味：(不支持使用DownloadManager下载)
@@ -182,6 +188,15 @@ enum RUpgradeFlavor {
     void installByPath(String path) async {
       bool isSuccess=await RUpgrade.installByPath(path);
     }
+```
+- 新增安装类型
+```dart
+/// [RUpgrade.upgradeWithId]、[RUpgrade.upgrade]、[RUpgrade.install]、[RUpgrade.installByPath]
+enum RUpgradeInstallType {
+  normal,//普通安装
+  silent,//静默安装
+  none,// 不进行安装
+}
 ```
 
 #### 5. 暂停下载
@@ -235,7 +250,7 @@ enum RUpgradeFlavor {
                 'https://mydata-1252536312.cos.ap-guangzhou.myqcloud.com/r_upgrade.patch',
                 fileName: 'r_upgrade.patch',
                 useDownloadManager: false,
-                isAutoRequestInstall: false,
+                installType: RUpgradeInstallType.none,
                 upgradeFlavor: RUpgradeFlavor.incrementUpgrade,
               );
     }

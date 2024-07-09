@@ -90,6 +90,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Incremental updating"),
         "Incremental_updating_failed": MessageLookupByLibrary.simpleMessage(
             "Incremental updating failed!"),
+        "Install_Related":
+            MessageLookupByLibrary.simpleMessage("Install Related"),
+        "Install_Type": MessageLookupByLibrary.simpleMessage("Install Type"),
+        "Install_Type_None": MessageLookupByLibrary.simpleMessage("None"),
+        "Install_Type_Normal":
+            MessageLookupByLibrary.simpleMessage("Normal Install"),
+        "Install_Type_Silent":
+            MessageLookupByLibrary.simpleMessage("Silent Install"),
+        "Install_Type_Silent_Tip": MessageLookupByLibrary.simpleMessage(
+            "Please note that this installation type requires system permissions!"),
         "Install_all_updates":
             MessageLookupByLibrary.simpleMessage("Install all updates"),
         "Jump_to_the_app_store":
@@ -101,6 +111,30 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Look at the last time ID download status"),
         "No_ID_last_time_to_download":
             MessageLookupByLibrary.simpleMessage("No ID last time to download"),
+        "Notification_Related":
+            MessageLookupByLibrary.simpleMessage("Notification Related"),
+        "Notification_Style":
+            MessageLookupByLibrary.simpleMessage("Notification Style"),
+        "Notification_Style_None": MessageLookupByLibrary.simpleMessage("None"),
+        "Notification_Style_PlanTime":
+            MessageLookupByLibrary.simpleMessage("PlanTime"),
+        "Notification_Style_PlanTime_Speech":
+            MessageLookupByLibrary.simpleMessage("PlanTime/Speech"),
+        "Notification_Style_Speech":
+            MessageLookupByLibrary.simpleMessage("Speech"),
+        "Notification_Style_Speech_PlanTime":
+            MessageLookupByLibrary.simpleMessage("Speech/PlanTime"),
+        "Notification_Visibility":
+            MessageLookupByLibrary.simpleMessage("Notification Visibility"),
+        "Notification_Visibility_Hidden":
+            MessageLookupByLibrary.simpleMessage("Hidden"),
+        "Notification_Visibility_Visible":
+            MessageLookupByLibrary.simpleMessage("Visible"),
+        "Notification_Visibility_Visible_Notify_Completed":
+            MessageLookupByLibrary.simpleMessage("Visible Notify Completed"),
+        "Notification_Visibility_Visible_Notify_Only_Completion":
+            MessageLookupByLibrary.simpleMessage(
+                "Visible Notify Only Completion"),
         "Please_click_on_start_hot_update":
             MessageLookupByLibrary.simpleMessage(
                 "Please click on start hot update"),
